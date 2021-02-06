@@ -6,6 +6,7 @@ import * as argon2 from 'argon2'
 
 import { UsersDto } from './dto/users.dto';
 import { UsersEntity } from './users.entity';
+import { UserRO } from './users.interface'
 
 
 @Injectable()
@@ -20,11 +21,15 @@ export class UsersService {
      * Return JWT.
      * @param userData 
      */
-    async loginRequest( userData: UsersDto ): Promise<any> {
-        const payload = { email: userData.email }
+    async loginRequest( userData: UsersDto ): Promise<UserRO> {
+        const payload = { email: userData.email } // Type ProfileRO
+        const access_token = this.jwtService.sign( payload )
 
         return {
-            access_token: this.jwtService.sign( payload )
+            user: {
+                email: userData.email,
+                token: access_token
+            }
         }
     }
 
