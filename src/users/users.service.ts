@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 
 import { UsersDto } from './dto/users.dto';
@@ -12,13 +13,28 @@ export class UsersService {
     constructor(
         @InjectRepository( UsersEntity )
         private readonly repository: Repository<UsersEntity>,
+        private readonly jwtService: JwtService
     ) {}
+
+    /**
+     * Return JWT.
+     * @param userData 
+     */
+    async loginRequest( userData: UsersDto ): Promise<any> {
+        const payload = { email: userData.email }
+
+        return {
+            access_token: this.jwtService.sign( payload )
+        }
+    }
+
+    // async fineOne( userData: UsersDto )
 
     /**
      * Login.
      * @param { email, password } login data.
      */
-    async login( { email, password }: UsersDto ): Promise<UsersEntity> {
+    async login( email: string, password: string ): Promise<UsersEntity> {
         const user = await this.repository.findOne( { email } )
 
         if ( user && await argon2.verify( user.password, password ) ) return user
