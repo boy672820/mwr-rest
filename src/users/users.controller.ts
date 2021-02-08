@@ -29,4 +29,14 @@ export class UsersController {
     async create( @Body() userData: UsersDto ) {
         return this.usersService.create( userData )
     }
+
+    @Post( 'test' )
+    async test( @Body() data: any ): Promise<string> {
+        return `${data.test} // request success!`
+    }
+
+    @Get( 'get' )
+    public async getTest(): Promise<string> {
+        return 'get test success'
+    }
 }
