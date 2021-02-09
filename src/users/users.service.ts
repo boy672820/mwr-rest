@@ -19,16 +19,32 @@ export class UsersService {
 
     /**
      * Return JWT.
-     * @param userData 
+     * @param userData UsersDto
      */
-    async loginRequest( userData: UsersDto ): Promise<UserRO> {
-        const payload = { email: userData.email } // Type ProfileRO
-        const access_token = this.jwtService.sign( payload )
+    async loginRequest( { email }: UsersDto ): Promise<UserRO> {
+        const payload = { email: email } // Type ProfileRO
+        const access_token = await this.jwtService.sign( payload )
 
         return {
             user: {
-                email: userData.email,
+                email: email,
                 token: access_token
+            }
+        }
+    }
+
+    /**
+     * Get refresh token.
+     * @param email string
+     */
+    async getRefreshToken( userEmail: string ): Promise<UserRO> {
+        const payload = { email: userEmail }
+        const refresh_token = await this.jwtService.sign( userEmail )
+
+        return {
+            user: {
+                email: userEmail,
+                token: refresh_token
             }
         }
     }

@@ -24,19 +24,15 @@ export class UsersController {
     getProfile( @Req() req ): Promise<ProfileRO> {
         return req.user
     }
+    
+    @UseGuards( JwtAuthGuard )
+    @Post( 'refresh' )
+    refreshToken( @Body() email ): Promise<UserRO> {
+        return this.usersService.getRefreshToken( email )
+    }
 
     @Post( 'create' )
     async create( @Body() userData: UsersDto ) {
         return this.usersService.create( userData )
-    }
-
-    @Post( 'test' )
-    async test( @Body() data: any ): Promise<string> {
-        return `${data.test} // request success!`
-    }
-
-    @Get( 'get' )
-    public async getTest(): Promise<string> {
-        return 'get test success'
     }
 }
