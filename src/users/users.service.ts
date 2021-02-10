@@ -21,10 +21,11 @@ export class UsersService {
      * Return JWT.
      * @param userData UsersDto
      */
-    async loginRequest( { email }: UsersDto ): Promise<any> {
-        const payload = { email: email } // Type ProfileRO
-        const access_token = await this.jwtService.sign( payload )
-        const refresh_token = await this.jwtService.sign( { email: email, refresh: true } )
+    async loginRequest( { email }: UsersDto ): Promise<UserRO> {
+        const refresh_token = await this.jwtService.sign( { email: email, refresh: true }  )
+        const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
+
+        this.repository.update( { email: email }, { token: refresh_token } )
 
         return {
             user: {
@@ -40,18 +41,31 @@ export class UsersService {
      * @param email string
      */
     async getRefreshToken( userEmail: string ): Promise<UserRO> {
-        const payload = { email: userEmail }
-        const refresh_token = await this.jwtService.sign( userEmail )
+        const payload = { email: userEmail, refresh: true }
+        const refresh_token = await this.jwtService.sign( payload )
 
         return {
             user: {
                 email: userEmail,
-                token: refresh_token
+                token: '',
+                refresh_token: refresh_token
             }
         }
     }
 
-    // async fineOne( userData: UsersDto )
+    async getAccessToken( refresh_token: string ): Promise<UserRO> {
+        const user = await this.repository.findOne( { token: refresh_token } )
+        const access_token = await this.jwtService.sign( { email: user.email, refresh_token: refresh_token } )
+        const new_refresh = await this.jwtService.sign( { email: user.email, refresh: true } )
+
+        return {
+            user: {
+                email: user.email,
+                token: access_token,
+                refresh_token: new_refresh
+            }
+        }
+    }
 
     /**
      * Login.

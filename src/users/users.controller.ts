@@ -13,10 +13,15 @@ export class UsersController {
         private readonly usersService: UsersService
     ) {}
 
+    @Post( 'create' )
+    async create( @Body() userData: UsersDto ) {
+        return this.usersService.create( userData )
+    }
+
     @UseGuards( LocalAuthGuard )
     @Post( 'login' )
     async login( @Body() userData: UsersDto ): Promise<UserRO> {
-        return await this.usersService.loginRequest( userData )
+        return this.usersService.loginRequest( userData )
     }
 
     @UseGuards( JwtAuthGuard )
@@ -24,15 +29,16 @@ export class UsersController {
     getProfile( @Req() req ): Promise<ProfileRO> {
         return req.user
     }
-    
+
     @UseGuards( JwtAuthGuard )
     @Post( 'refresh' )
-    refreshToken( @Body() email ): Promise<UserRO> {
+    refreshToken( @Body() email: string ): Promise<UserRO> {
         return this.usersService.getRefreshToken( email )
     }
 
-    @Post( 'create' )
-    async create( @Body() userData: UsersDto ) {
-        return this.usersService.create( userData )
+    @UseGuards( JwtAuthGuard )
+    @Post( 'get-access-token' )
+    getAccessToken( @Body() refresh_token: string ): Promise<UserRO> {
+        return this.usersService.getAccessToken( refresh_token )
     }
 }
