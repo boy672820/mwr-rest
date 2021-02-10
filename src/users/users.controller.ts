@@ -16,7 +16,7 @@ export class UsersController {
     @UseGuards( LocalAuthGuard )
     @Post( 'login' )
     async login( @Body() userData: UsersDto ): Promise<UserRO> {
-        return this.usersService.loginRequest( userData )
+        return await this.usersService.loginRequest( userData )
     }
 
     @UseGuards( JwtAuthGuard )

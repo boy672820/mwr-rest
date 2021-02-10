@@ -21,14 +21,16 @@ export class UsersService {
      * Return JWT.
      * @param userData UsersDto
      */
-    async loginRequest( { email }: UsersDto ): Promise<UserRO> {
+    async loginRequest( { email }: UsersDto ): Promise<any> {
         const payload = { email: email } // Type ProfileRO
         const access_token = await this.jwtService.sign( payload )
+        const refresh_token = await this.jwtService.sign( { email: email, refresh: true } )
 
         return {
             user: {
                 email: email,
-                token: access_token
+                token: access_token,
+                refresh_token: refresh_token
             }
         }
     }
