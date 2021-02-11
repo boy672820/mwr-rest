@@ -25,7 +25,11 @@ export class UsersService {
         const refresh_token = await this.jwtService.sign( { email: email, refresh: true }  )
         const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
 
-        this.repository.update( { email: email }, { token: refresh_token } )
+        // Update user token.
+        this.repository.update(
+            { email: email },
+            { token: `Bearer ${refresh_token}` }
+        )
 
         return {
             user: {
@@ -40,25 +44,43 @@ export class UsersService {
      * Get refresh token.
      * @param email string
      */
-    async getRefreshToken( userEmail: string ): Promise<UserRO> {
-        const payload = { email: userEmail, refresh: true }
+    async getRefreshToken( email: string ): Promise<UserRO> {
+        const payload = { email: email, refresh: true }
         const refresh_token = await this.jwtService.sign( payload )
+
+        // Update user token.
+        this.repository.createQueryBuilder().update( UsersEntity ).set( { token: refresh_token } ).where( 'email = ifnull(:email, 0)', { email: email } ).execute()
 
         return {
             user: {
-                email: userEmail,
+                email: email,
                 token: '',
                 refresh_token: refresh_token
             }
         }
     }
 
+    /**
+     * Get access token when user refresh page.
+     * @param refresh_token string
+     */
     async getAccessToken( refresh_token: string ): Promise<UserRO> {
+        // Get user private email.
         const user = await this.repository.findOne( { token: refresh_token } )
-        const access_token = await this.jwtService.sign( { email: user.email, refresh_token: refresh_token } )
-        const new_refresh = await this.jwtService.sign( { email: user.email, refresh: true } )
 
-        return {
+        if ( ! user ) throw new HttpException( { message: '인증 정보가 일치하지 않습니다. 다시 로그인 해주세요.' }, HttpStatus.BAD_REQUEST )
+
+        // Create Refresh token & access token.
+        const new_refresh = await this.jwtService.sign( { email: user.email, refresh: true } )
+        const access_token = await this.jwtService.sign( { email: user.email, refresh_token: new_refresh } )
+
+        // Update token from user.
+        this.repository.update(
+            { email: user.email },
+            { token: `Bearer ${new_refresh}` }
+        )
+
+        return { // Return UserRo.
             user: {
                 email: user.email,
                 token: access_token,

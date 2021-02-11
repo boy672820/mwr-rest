@@ -1,4 +1,4 @@
-import { Body, Controller, Req, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Req, Get, Post, Headers, UseGuards } from '@nestjs/common'
 
 import { UsersService } from './users.service'
 import { UsersDto } from './dto/users.dto'
@@ -36,9 +36,8 @@ export class UsersController {
         return this.usersService.getRefreshToken( email )
     }
 
-    @UseGuards( JwtAuthGuard )
     @Post( 'get-access-token' )
-    getAccessToken( @Body() refresh_token: string ): Promise<UserRO> {
-        return this.usersService.getAccessToken( refresh_token )
+    getAccessToken( @Headers() headers ) {
+        return this.usersService.getAccessToken( headers.authorization )
     }
 }
