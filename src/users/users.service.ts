@@ -44,12 +44,13 @@ export class UsersService {
      * Get refresh token.
      * @param email string
      */
-    async getRefreshToken( email: string ): Promise<UserRO> {
+    async getRefreshToken( email ): Promise<UserRO> {
         const payload = { email: email, refresh: true }
+        
         const refresh_token = await this.jwtService.sign( payload )
 
         // Update user token.
-        this.repository.createQueryBuilder().update( UsersEntity ).set( { token: refresh_token } ).where( 'email = ifnull(:email, 0)', { email: email } ).execute()
+        this.repository.update( { email: email }, { token: refresh_token } )
 
         return {
             user: {

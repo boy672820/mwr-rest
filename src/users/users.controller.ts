@@ -32,8 +32,8 @@ export class UsersController {
 
     @UseGuards( JwtAuthGuard )
     @Post( 'refresh' )
-    refreshToken( @Body() email: string ): Promise<UserRO> {
-        return this.usersService.getRefreshToken( email )
+    refreshToken( @Body() body ): Promise<UserRO> {
+        return this.usersService.getRefreshToken( body.email )
     }
 
     @Post( 'get-access-token' )
