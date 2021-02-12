@@ -28,7 +28,7 @@ export class UsersService {
         // Update user token.
         this.repository.update(
             { email: email },
-            { token: `Bearer ${refresh_token}` }
+            { token: refresh_token }
         )
 
         return {
@@ -48,14 +48,18 @@ export class UsersService {
         const payload = { email: email, refresh: true }
         
         const refresh_token = await this.jwtService.sign( payload )
+        const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
 
         // Update user token.
-        this.repository.update( { email: email }, { token: refresh_token } )
+        this.repository.update(
+            { email: email },
+            { token: refresh_token }
+        )
 
         return {
             user: {
                 email: email,
-                token: '',
+                token: access_token,
                 refresh_token: refresh_token
             }
         }
@@ -78,7 +82,7 @@ export class UsersService {
         // Update token from user.
         this.repository.update(
             { email: user.email },
-            { token: `Bearer ${new_refresh}` }
+            { token: new_refresh }
         )
 
         return { // Return UserRo.

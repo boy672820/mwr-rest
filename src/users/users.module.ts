@@ -12,7 +12,7 @@ import { jwtConstants } from 'src/auth/constants';
     TypeOrmModule.forFeature( [ UsersEntity ] ),
     JwtModule.register( {
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' }
+      signOptions: { expiresIn: '14 days' }
     })
   ],
   controllers: [ UsersController ],
