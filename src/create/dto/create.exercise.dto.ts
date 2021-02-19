@@ -3,6 +3,9 @@ import { IsNotEmpty } from 'class-validator'
 export class CreateExerciseDTO {
 
     @IsNotEmpty()
+    readonly user_id: number
+
+    @IsNotEmpty()
     readonly exercise_name: string
 
     @IsNotEmpty()

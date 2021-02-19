@@ -11,9 +11,9 @@ export class CreateController {
         private readonly createService: CreateService
     ) {}
 
-    @Post( 'exercise' )
-    async createExercise( @Body() data: CreateExerciseDTO ): Promise<any> {
-        return this.createService.createExercise( data )
+    @Post( 'default-exercise' )
+    async createDefaultExercise( @Body() data: CreateExerciseDTO ): Promise<any> {
+        return this.createService.createDefaultExercise( data )
     }
 
 }
