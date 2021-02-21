@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity( 'sets' )
-export class CreateSetEntity {
+export class RoutineSetsEntity {
 
     @PrimaryGeneratedColumn()
     ID: number
@@ -22,7 +22,7 @@ export class CreateSetEntity {
     set_max_reps: number
 
     @Column()
-    set_disable_range: boolean
+    set_disable_range: 0 | 1
 
     @Column()
     set_rir: number

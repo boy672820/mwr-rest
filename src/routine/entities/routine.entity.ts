@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity( 'routines' )
-export class CreateRoutineEntity {
+export class RoutineEntity {
 
     @PrimaryGeneratedColumn()
     ID: number
@@ -12,8 +12,8 @@ export class CreateRoutineEntity {
     @Column()
     routine_title: string
 
-    @Column()
-    routine_active: 1 | 0
+    @Column( { default: 0 } )
+    routine_active: 0 | 1
 
     @Column()
     routine_content: string

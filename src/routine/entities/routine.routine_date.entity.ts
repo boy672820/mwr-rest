@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity( 'blocks' )
-export class CreateBlockEntity {
+@Entity( 'routine_date' )
+export class RoutineDateEntity {
 
     @PrimaryGeneratedColumn()
     ID: number
@@ -10,6 +10,9 @@ export class CreateBlockEntity {
     routine_id: number
 
     @Column()
-    block_title: string
+    block_id: number
+
+    @Column()
+    routine_date: string
 
 }

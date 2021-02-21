@@ -1,15 +1,15 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity( 'exercises' )
-export class CreateExerciseEntity {
+@Entity( 'blocks' )
+export class RoutineBlockEntity {
 
     @PrimaryGeneratedColumn()
     ID: number
 
     @Column()
-    block_id: number
+    routine_id: number
 
     @Column()
-    exercise_name: string
+    block_title: string
 
 }

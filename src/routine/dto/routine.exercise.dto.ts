@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator'
 
-export class CreateExerciseDTO {
+export class RoutineExerciseDTO {
 
     @IsNotEmpty()
     readonly user_id: number
@@ -25,4 +25,8 @@ export class CreateExerciseDTO {
 
     @IsNotEmpty()
     readonly rir: number
+
+    @IsNotEmpty()
+    readonly rest: number
+
 }
