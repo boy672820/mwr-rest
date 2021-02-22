@@ -43,8 +43,28 @@ export class RoutineService {
         return routine
     }
     
-    async getBlocks(): Promise<any> {
-        return 'get blocks'
+    async getRoutineDates( routine_id: number ): Promise<any> {
+        const rows = await this.routineDateRepository.createQueryBuilder( 'routine_date' )
+                            .leftJoinAndSelect( 'blocks', 'block', 'routine_date.block_id = block.ID' )
+                            .select( [
+                                'routine_date.ID as ID',
+                                'routine_date.routine_date as routine_date',
+                                'routine_date.block_id as block_id',
+                                'block.block_title as block_title'
+                            ] )
+                            .where( `routine_date.routine_id = ${routine_id}` )
+                            .getRawMany()
+
+        const data = {}
+        rows.map( ( row ) => {
+            data[ row.routine_date ] = {
+                ID: row.ID,
+                block_id: row.block_id,
+                block_title: row.block_title
+            }
+        } )
+
+        return data
     }
     
     async createDefaultExercise( data: RoutineExerciseDTO ): Promise<any> {

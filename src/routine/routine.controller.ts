@@ -20,11 +20,11 @@ export class RoutineController {
         return this.routineService.getActiveRoutine( user_email )
     }
 
-    @Get( 'blocks' )
-    async getBlocks(): Promise<any> {
-        return this.routineService.getBlocks()
+    @Get( 'dates/:routine_id' )
+    async getRoutineDates( @Param() { routine_id } ): Promise<any> {
+        return this.routineService.getRoutineDates( routine_id )
     }
-    
+
     @Post( 'default-exercise' )
     async createDefaultExercise( @Body() data: RoutineExerciseDTO ): Promise<any> {
         return this.routineService.createDefaultExercise( data )
