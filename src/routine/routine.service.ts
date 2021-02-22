@@ -67,32 +67,8 @@ export class RoutineService {
         return data
     }
     
-    async createDefaultExercise( data: RoutineExerciseDTO ): Promise<any> {
-        // const routine = await this.routineRepository.findOne( {
-        //     user_id: data.user_id,
-        //     routine_active: 1
-        // } )
-
-        // const block = await this.createBlock( routine.ID )
-        // const exercise = await this.createExercise( block.ID, data.exercise_name )
-
-        // let i = 1
-        // const createSetEntity = new CreateSetEntity()
-        // createSetEntity.exercise_id = exercise.ID
-
-        // for ( i; i <= data.set_number; i += 1 ) {
-        //     createSetEntity.set_number = i
-        //     createSetEntity.set_reps = data.reps
-        //     createSetEntity.set_max_reps = data.max_reps
-        //     createSetEntity.set_disable_range = data.disable_range ? 1 : 0
-        //     createSetEntity.set_weight = data.weight
-        //     createSetEntity.set_rir = data.rir
-        //     createSetEntity.set_rest = data.rest
-
-        //     this.setRepository.save( createSetEntity )
-        // }
-
-        return 'exercise'
+    async getExercises( block_id: number ): Promise<RoutineExerciseEntity[]> {
+        return await this.exerciseRepository.find( { block_id } )
     }
 
     async createExercise( block_id: number, exercise_name: string ) {
