@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { RoutineSetsEntity } from "./routine.sets.entity";
 
 @Entity( 'exercises' )
 export class RoutineExerciseEntity {

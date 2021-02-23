@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { getRepository, Repository } from 'typeorm'
 
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
@@ -44,16 +44,17 @@ export class RoutineService {
     }
     
     async getRoutineDates( routine_id: number ): Promise<any> {
-        const rows = await this.routineDateRepository.createQueryBuilder( 'routine_date' )
-                            .leftJoinAndSelect( 'blocks', 'block', 'routine_date.block_id = block.ID' )
-                            .select( [
-                                'routine_date.ID as ID',
-                                'routine_date.routine_date as routine_date',
-                                'routine_date.block_id as block_id',
-                                'block.block_title as block_title'
-                            ] )
-                            .where( `routine_date.routine_id = ${routine_id}` )
-                            .getRawMany()
+        const rows = await this.routineDateRepository
+                                .createQueryBuilder( 'routine_date' )
+                                .leftJoinAndSelect( 'blocks', 'block', 'routine_date.block_id = block.ID' )
+                                .select( [
+                                    'routine_date.ID as ID',
+                                    'routine_date.routine_date as routine_date',
+                                    'routine_date.block_id as block_id',
+                                    'block.block_title as block_title'
+                                ] )
+                                .where( `routine_date.routine_id = ${routine_id}` )
+                                .getRawMany()
 
         const data = {}
         rows.map( ( row ) => {
@@ -67,8 +68,18 @@ export class RoutineService {
         return data
     }
     
-    async getExercises( block_id: number ): Promise<RoutineExerciseEntity[]> {
-        return await this.exerciseRepository.find( { block_id } )
+    async getExercises( block_id: number ): Promise<any> {
+        const blocks = await this.exerciseRepository.find( { block_id: block_id } )
+
+        const res = { ...blocks, sets: [] }
+
+        res.sets = blocks.map( ( block ) => {
+            const sets = this.setRepository.find( { exercise_id: block.ID } )
+
+            return sets
+        } )
+
+        return res
     }
 
     async createExercise( block_id: number, exercise_name: string ) {
