@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { getRepository, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
 import { RoutineBlockEntity } from './entities/routine.block.entity'
 import { RoutineDateEntity } from './entities/routine.routine_date.entity'
 import { RoutineEntity } from './entities/routine.entity'
-import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
 import { RoutineBlockDTO } from './dto/routine.block.dto'
 import { RoutineDateDTO } from './dto/routine.date.dto'
 import { UsersEntity } from 'src/users/users.entity'
@@ -67,19 +66,17 @@ export class RoutineService {
 
         return data
     }
-    
-    async getExercises( block_id: number ): Promise<any> {
-        const blocks = await this.exerciseRepository.find( { block_id: block_id } )
 
-        const res = { ...blocks, sets: [] }
-
-        res.sets = blocks.map( ( block ) => {
-            const sets = this.setRepository.find( { exercise_id: block.ID } )
-
-            return sets
-        } )
-
-        return res
+    async getExercises( block_id: number ): Promise<RoutineExerciseEntity[]> {
+        return await this.exerciseRepository
+                        .createQueryBuilder( 'exercises' )
+                        .leftJoinAndSelect( 'exercises.sets', 'set' )
+                        .where( `exercises.block_id = ${ block_id }` )
+                        .orderBy( {
+                            'exercises.ID': 'ASC',
+                            'set.set_number': 'ASC'
+                        } )
+                        .getMany()
     }
 
     async createExercise( block_id: number, exercise_name: string ) {

@@ -13,4 +13,10 @@ export class RoutineExerciseEntity {
     @Column()
     exercise_name: string
 
+    @OneToMany(
+        type => RoutineSetsEntity,
+        set => set.exercise
+    )
+    sets: RoutineSetsEntity[]
+
 }

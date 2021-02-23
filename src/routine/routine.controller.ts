@@ -16,7 +16,7 @@ export class RoutineController {
     ) {}
 
     @Get( 'exercises/:block_id' )
-    async getExercises( @Param() { block_id } ): Promise<any> {
+    async getExercises( @Param() { block_id } ): Promise<RoutineExerciseEntity[]> {
         return this.routineService.getExercises( block_id )
     }
 
