@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
+import { RoutineDateDTO } from './dto/routine.date.dto'
+import { RoutineBlockDTO } from './dto/routine.block.dto'
+import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
+
+import { UsersEntity } from 'src/users/users.entity'
+import { RoutineEntity } from './entities/routine.entity'
+import { RoutineDateEntity } from './entities/routine.routine_date.entity'
+import { RoutineBlockEntity } from './entities/routine.block.entity'
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
-import { RoutineBlockEntity } from './entities/routine.block.entity'
-import { RoutineDateEntity } from './entities/routine.routine_date.entity'
-import { RoutineEntity } from './entities/routine.entity'
-import { RoutineBlockDTO } from './dto/routine.block.dto'
-import { RoutineDateDTO } from './dto/routine.date.dto'
-import { UsersEntity } from 'src/users/users.entity'
 
 
 @Injectable()
@@ -56,6 +58,7 @@ export class RoutineService {
                                 .getRawMany()
 
         const data = {}
+
         rows.map( ( row ) => {
             data[ row.routine_date ] = {
                 ID: row.ID,
@@ -79,12 +82,31 @@ export class RoutineService {
                         .getMany()
     }
 
-    async createExercise( block_id: number, exercise_name: string ) {
-        const routineExerciseEntity = new RoutineExerciseEntity()
-        routineExerciseEntity.block_id = block_id
-        routineExerciseEntity.exercise_name = exercise_name
+    async createExercise( data: RoutineExerciseDTO ): Promise<RoutineExerciseEntity> {
+        const exerciseEntity = new RoutineExerciseEntity()
+        exerciseEntity.block_id = data.block_id
+        exerciseEntity.exercise_name = data.exercise_name
+        // Create exercise.
+        const exercise = await this.exerciseRepository.save( exerciseEntity )
 
-        return await this.exerciseRepository.save( routineExerciseEntity )
+        const sets: RoutineSetsEntity[] = []
+
+        let i = 1
+        for ( i; i <= data.set_number; i += 1 ) {
+            const setEntity = new RoutineSetsEntity()
+            setEntity.set_number = i
+            setEntity.exercise_id = exercise.ID
+            setEntity.set_weight = data.weight
+            setEntity.set_reps = data.reps
+            setEntity.set_max_reps = data.max_reps
+            setEntity.set_disable_range = data.disable_range ? 1 : 0
+            setEntity.set_rir = data.rir
+            setEntity.set_rest = data.rest
+            // Create set.
+            this.setRepository.save( setEntity )
+        }
+
+        return exercise
     }
 
     async createBlock( data: RoutineBlockDTO ) {

@@ -33,7 +33,8 @@ export class RoutineSetsEntity {
 
     @ManyToOne(
         type => RoutineExerciseEntity,
-        exercise => exercise.sets
+        exercise => exercise.sets,
+        { onDelete: 'CASCADE' }
     )
     @JoinColumn( { name: 'exercise_id' } )
     exercise: RoutineExerciseEntity

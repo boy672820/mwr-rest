@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 
-import { RoutineService } from './routine.service';
-import { RoutineBlockDTO } from './dto/routine.block.dto';
-import { RoutineDateDTO } from './dto/routine.date.dto';
-import { RoutineEntity } from './entities/routine.entity';
-import { RoutineBlockEntity } from './entities/routine.block.entity';
-import { RoutineExerciseEntity } from './entities/routine.exercise.entity';
+import { RoutineService } from './routine.service'
+
+import { RoutineBlockDTO } from './dto/routine.block.dto'
+import { RoutineDateDTO } from './dto/routine.date.dto'
+import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
+
+import { RoutineEntity } from './entities/routine.entity'
+import { RoutineBlockEntity } from './entities/routine.block.entity'
+import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 
 
 @Controller( 'routine' )
@@ -33,6 +36,11 @@ export class RoutineController {
     @Post( 'block' )
     async createBlock( @Body() data: RoutineBlockDTO ): Promise<RoutineBlockEntity> {
         return this.routineService.createBlock( data )
+    }
+
+    @Post( 'exercise' )
+    async createExercise( @Body() data: RoutineExerciseDTO ): Promise<RoutineExerciseEntity> {
+        return this.routineService.createExercise( data )
     }
 
     @Get( 'now-date' )

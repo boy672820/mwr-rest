@@ -3,13 +3,16 @@ import { IsNotEmpty } from 'class-validator'
 export class RoutineExerciseDTO {
 
     @IsNotEmpty()
-    readonly user_id: number
+    readonly block_id: number
 
     @IsNotEmpty()
     readonly exercise_name: string
 
     @IsNotEmpty()
     readonly set_number: number
+
+    @IsNotEmpty()
+    readonly weight: number
 
     @IsNotEmpty()
     readonly reps: number
@@ -19,9 +22,6 @@ export class RoutineExerciseDTO {
 
     @IsNotEmpty()
     readonly disable_range: boolean
-
-    @IsNotEmpty()
-    readonly weight: number
 
     @IsNotEmpty()
     readonly rir: number
