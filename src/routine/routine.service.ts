@@ -96,17 +96,21 @@ export class RoutineService {
             const setEntity = new RoutineSetsEntity()
             setEntity.set_number = i
             setEntity.exercise_id = exercise.ID
-            setEntity.set_weight = data.weight
-            setEntity.set_reps = data.reps
-            setEntity.set_max_reps = data.max_reps
-            setEntity.set_disable_range = data.disable_range ? 1 : 0
-            setEntity.set_rir = data.rir
-            setEntity.set_rest = data.rest
+            setEntity.set_weight = data.set_weight
+            setEntity.set_reps = data.set_reps
+            setEntity.set_max_reps = data.set_max_reps
+            setEntity.set_disable_range = data.set_disable_range ? 1 : 0
+            setEntity.set_rir = data.set_rir
+            setEntity.set_rest = data.set_rest
             // Create set.
-            this.setRepository.save( setEntity )
+            await this.setRepository.save( setEntity )
         }
 
         return exercise
+    }
+
+    async removeExercise( exercise_id: number ): Promise<any> {
+        return await this.exerciseRepository.delete( exercise_id )
     }
 
     async createBlock( data: RoutineBlockDTO ) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
 
 import { RoutineService } from './routine.service'
 
@@ -41,6 +41,11 @@ export class RoutineController {
     @Post( 'exercise' )
     async createExercise( @Body() data: RoutineExerciseDTO ): Promise<RoutineExerciseEntity> {
         return this.routineService.createExercise( data )
+    }
+
+    @Delete( 'exercise/:exercise_id' )
+    async removeExercise( @Param() { exercise_id } ): Promise<any> {
+        return this.routineService.removeExercise( exercise_id )
     }
 
     @Get( 'now-date' )
