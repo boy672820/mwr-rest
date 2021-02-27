@@ -13,6 +13,8 @@ import { RoutineBlockEntity } from './entities/routine.block.entity'
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
 import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
+import { RoutineCreateSetDTO } from './dto/routine.create.set.dto'
+import { RoutineUpdateExerciseDTO } from './dto/routine.update.exercise.dto'
 
 
 @Injectable()
@@ -110,8 +112,31 @@ export class RoutineService {
         return exercise
     }
 
+    async updateExercise( data: RoutineUpdateExerciseDTO ): Promise<any> {
+        return await this.exerciseRepository.update( { ID: data.ID }, { exercise_name: data.exercise_name } )
+    }
+
     async removeExercise( exercise_id: number ): Promise<any> {
         return await this.exerciseRepository.delete( exercise_id )
+    }
+
+    async createExerciseSet( data: RoutineCreateSetDTO ): Promise<RoutineSetsEntity> {
+        // Get maximum set_number.
+        const sets = await this.setRepository.find( { exercise_id: data.exercise_id } )
+        const set_number = sets.length + 1
+
+        // Create set.
+        const setEntity = new RoutineSetsEntity()
+        setEntity.exercise_id = data.exercise_id
+        setEntity.set_number = set_number
+        setEntity.set_weight = data.set_weight
+        setEntity.set_reps = data.set_reps
+        setEntity.set_max_reps = data.set_max_reps
+        setEntity.set_disable_range = data.set_disable_range ? 1 : 0
+        setEntity.set_rir = data.set_rir
+        setEntity.set_rest = data.set_rest
+        
+        return await this.setRepository.save( setEntity )
     }
 
     async updateExerciseSet( data: RoutineUpdateSetDTO ): Promise<any> {
@@ -125,6 +150,25 @@ export class RoutineService {
             set_disable_range: data.set_disable_range ? 1 : 0,
             set_rir: data.set_rir,
             set_rest: data.set_rest
+        } )
+    }
+
+    async removeExerciseSet( id: number ): Promise<any> {
+        return await this.setRepository.delete( id )
+    }
+
+    async updateOrderSetNumber( exercise_id: number ) {
+        // Get sets.
+        const sets = await this.setRepository.find( {
+            order: { ID: 'ASC' },
+            where: { exercise_id: exercise_id }
+        } )
+
+        // Update set_number order.
+        const res = sets.map( async ( row, i ) => {
+            const set_number = ( i + 1 )
+
+            return await this.setRepository.update( { ID: row.ID }, { set_number: set_number } )
         } )
     }
 
