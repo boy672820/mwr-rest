@@ -12,6 +12,7 @@ import { RoutineDateEntity } from './entities/routine.routine_date.entity'
 import { RoutineBlockEntity } from './entities/routine.block.entity'
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
+import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 
 
 @Injectable()
@@ -111,6 +112,20 @@ export class RoutineService {
 
     async removeExercise( exercise_id: number ): Promise<any> {
         return await this.exerciseRepository.delete( exercise_id )
+    }
+
+    async updateExerciseSet( data: RoutineUpdateSetDTO ): Promise<any> {
+        return await this.setRepository.update( {
+            exercise_id: data.exercise_id,
+            ID: data.ID
+        }, {
+            set_weight: data.set_weight,
+            set_reps: data.set_reps,
+            set_max_reps: data.set_max_reps,
+            set_disable_range: data.set_disable_range ? 1 : 0,
+            set_rir: data.set_rir,
+            set_rest: data.set_rest
+        } )
     }
 
     async createBlock( data: RoutineBlockDTO ) {

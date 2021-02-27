@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 
 import { RoutineService } from './routine.service'
 
@@ -9,6 +9,7 @@ import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
 import { RoutineEntity } from './entities/routine.entity'
 import { RoutineBlockEntity } from './entities/routine.block.entity'
 import { RoutineExerciseEntity } from './entities/routine.exercise.entity'
+import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 
 
 @Controller( 'routine' )
@@ -46,6 +47,11 @@ export class RoutineController {
     @Delete( 'exercise/:exercise_id' )
     async removeExercise( @Param() { exercise_id } ): Promise<any> {
         return this.routineService.removeExercise( exercise_id )
+    }
+
+    @Put( 'exercise/set' )
+    async updateExerciseSet( @Body() data: RoutineUpdateSetDTO ): Promise<any> {
+        return this.routineService.updateExerciseSet( data )
     }
 
     @Get( 'now-date' )
