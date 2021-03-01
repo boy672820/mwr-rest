@@ -26,7 +26,7 @@ export class UsersService {
         const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
 
         // Update user token.
-        this.repository.update(
+        await this.repository.update(
             { email: email },
             { token: refresh_token }
         )
@@ -125,5 +125,16 @@ export class UsersService {
             const errors = { email: '이미 존재하는 이메일 입니다.' }
             throw new HttpException( { message: '입력 정보 유효성검사 실패', errors }, HttpStatus.BAD_REQUEST )
         }
+    }
+
+    /**
+     * Validate access token.
+     * @param email User email.
+     * @param refresh_token User refresh token.
+     */
+    async validateAccessToken( email: string, refresh_token: string ): Promise<UsersEntity> {
+        const user = await this.repository.findOne( { email: email, token: refresh_token } )
+
+        return user
     }
 }
