@@ -15,6 +15,7 @@ import { RoutineSetsEntity } from './entities/routine.sets.entity'
 import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 import { RoutineCreateSetDTO } from './dto/routine.create.set.dto'
 import { RoutineUpdateExerciseDTO } from './dto/routine.update.exercise.dto'
+import { RoutineUpdateBlockDTO } from './dto/routine.update.block.dto'
 
 
 @Injectable()
@@ -46,7 +47,12 @@ export class RoutineService {
 
         return routine
     }
-    
+
+    /**
+     * Get routine dates.
+     * @param routine_id Routine id
+     * @returns 
+     */
     async getRoutineDates( routine_id: number ): Promise<any> {
         const rows = await this.routineDateRepository
                                 .createQueryBuilder( 'routine_date' )
@@ -73,6 +79,12 @@ export class RoutineService {
         return data
     }
 
+
+    /**
+     * Get exercxises by block id.
+     * @param block_id Block id.
+     * @returns 
+     */
     async getExercises( block_id: number ): Promise<RoutineExerciseEntity[]> {
         return await this.exerciseRepository
                         .createQueryBuilder( 'exercises' )
@@ -172,7 +184,11 @@ export class RoutineService {
         } )
     }
 
-    async createBlock( data: RoutineBlockDTO ) {
+    async getBlock( block_id: number ): Promise<RoutineBlockEntity> {
+        return await this.blockRepository.findOne( { ID: block_id } )
+    }
+
+    async createBlock( data: RoutineBlockDTO ): Promise<RoutineBlockEntity> {
         // routine block entity & save repository
         const routineBlockEntity = new RoutineBlockEntity()
         routineBlockEntity.routine_id = data.routine_id
@@ -189,6 +205,26 @@ export class RoutineService {
         await this.routineDateRepository.save( routineDateEntity )
 
         return block
+    }
+
+    /**
+     * Update block.
+     * @param data RoutineUpdateBlockDTO
+     * @returns 
+     */
+    async updateBlock( data: RoutineUpdateBlockDTO ): Promise<any> {
+        return await this.blockRepository.update( { ID: data.ID }, { block_title: data.block_title } )
+    }
+
+    async removeBlockAndDate( id: number ): Promise<any> {
+        // Remove all dates by block id.
+        await this.routineDateRepository.createQueryBuilder()
+                                        .delete()
+                                        .from( RoutineDateEntity )
+                                        .where( `block_id = ${id}` )
+                                        .execute()
+
+        return await this.blockRepository.delete( id )
     }
 
     /**

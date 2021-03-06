@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common'
 
 import { RoutineService } from './routine.service'
 
@@ -13,6 +13,7 @@ import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 import { RoutineCreateSetDTO } from './dto/routine.create.set.dto'
 import { RoutineSetsEntity } from './entities/routine.sets.entity'
 import { RoutineUpdateExerciseDTO } from './dto/routine.update.exercise.dto'
+import { RoutineUpdateBlockDTO } from './dto/routine.update.block.dto'
 
 
 @Controller( 'routine' )
@@ -50,12 +51,41 @@ export class RoutineController {
     }
 
     /**
+     * Get block.
+     * @param param0 Block id
+     */
+    @Get( 'block/:block_id' )
+    async getBlock( @Param() { block_id } ): Promise<RoutineBlockEntity> {
+        return this.routineService.getBlock( block_id )
+    }
+
+    /**
      * Create block.
      * @param data Block dto
      */
     @Post( 'block' )
     async createBlock( @Body() data: RoutineBlockDTO ): Promise<RoutineBlockEntity> {
         return this.routineService.createBlock( data )
+    }
+
+    /**
+     * Update block.
+     * @param data Routine update block dto
+     * @returns 
+     */
+    @Put( 'block' )
+    async updateBlock( @Body() data: RoutineUpdateBlockDTO ): Promise<any> {
+        return this.routineService.updateBlock( data )
+    }
+
+    /**
+     * Remove block.
+     * @param param0 block id
+     * @returns 
+     */
+    @Delete( 'block/:block_id' )
+    async removeBlock( @Param() { block_id } ): Promise<any> {
+        return this.routineService.removeBlockAndDate( block_id )
     }
 
     /**
@@ -66,7 +96,7 @@ export class RoutineController {
     async createExercise( @Body() data: RoutineExerciseDTO ): Promise<RoutineExerciseEntity> {
         return this.routineService.createExercise( data )
     }
-    
+
     @Put( 'exercise' )
     async updateExercise( @Body() data: RoutineUpdateExerciseDTO ): Promise<any> {
         return this.routineService.updateExercise( data )
