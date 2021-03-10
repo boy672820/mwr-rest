@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { RoutineModule } from './routine/routine.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { RecordModule } from './record/record.module';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     RoutineModule,
     UsersModule,
     AuthModule,
+    RecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],
