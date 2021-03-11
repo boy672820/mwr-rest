@@ -20,8 +20,13 @@ export class UsersController {
 
     @UseGuards( LocalAuthGuard )
     @Post( 'login' )
-    async login( @Body() userData: UsersDto ): Promise<UserRO> {
-        return this.usersService.loginRequest( userData )
+    async login( @Body() userData: UsersDto ) {
+        const res = await this.usersService.loginRequest( userData )
+
+        // Set httpOnly cookie.
+        // response.setCookie( 'token', 'test' )
+
+        return res
     }
 
     @UseGuards( JwtAuthGuard )

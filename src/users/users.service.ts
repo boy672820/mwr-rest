@@ -22,7 +22,7 @@ export class UsersService {
      * @param userData UsersDto
      */
     async loginRequest( { email }: UsersDto ): Promise<UserRO> {
-        const refresh_token = await this.jwtService.sign( { email: email, refresh: true }  )
+        const refresh_token = await this.jwtService.sign( { email: email, refresh: true } )
         const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
 
         // Update user token.
@@ -35,7 +35,8 @@ export class UsersService {
             user: {
                 email: email,
                 token: access_token,
-                refresh_token: refresh_token
+                refresh_token: refresh_token,
+                cookie: `Authentication=${refresh_token}; HttpOnly; Path=/;`
             }
         }
     }
@@ -60,7 +61,8 @@ export class UsersService {
             user: {
                 email: email,
                 token: access_token,
-                refresh_token: refresh_token
+                refresh_token: refresh_token,
+                cookie: ''
             }
         }
     }
@@ -89,7 +91,8 @@ export class UsersService {
             user: {
                 email: user.email,
                 token: access_token,
-                refresh_token: new_refresh
+                refresh_token: new_refresh,
+                cookie: ''
             }
         }
     }
