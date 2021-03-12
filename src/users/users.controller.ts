@@ -1,4 +1,4 @@
-import { Body, Controller, Req, Get, Post, Headers, UseGuards } from '@nestjs/common'
+import { Body, Controller, Req, Get, Post, Headers, UseGuards, Res } from '@nestjs/common'
 
 import { UsersService } from './users.service'
 import { UsersDto } from './dto/users.dto'
@@ -20,11 +20,16 @@ export class UsersController {
 
     @UseGuards( LocalAuthGuard )
     @Post( 'login' )
-    async login( @Body() userData: UsersDto ) {
-        const res = await this.usersService.loginRequest( userData )
+    async login( @Body() userData: UsersDto, @Res( { passthrough: true } ) response ) {
+        const res = await this.usersService.getTokens( userData )
 
+        const cookieOptions = {
+            path: '/',
+            httpOnly: true,
+            maxAge: 1860000
+        }
         // Set httpOnly cookie.
-        // response.setCookie( 'token', 'test' )
+        response.setCookie( 'token', res.user.cookie, cookieOptions )
 
         return res
     }
@@ -33,16 +38,5 @@ export class UsersController {
     @Get( 'profile' )
     getProfile( @Req() req ): Promise<ProfileRO> {
         return req.user
-    }
-
-    @UseGuards( JwtAuthGuard )
-    @Post( 'refresh' )
-    refreshToken( @Body() body ): Promise<UserRO> {
-        return this.usersService.getRefreshToken( body.email )
-    }
-
-    @Post( 'get-access-token' )
-    getAccessToken( @Headers() headers ) {
-        return this.usersService.getAccessToken( headers.authorization )
     }
 }
