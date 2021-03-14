@@ -4,9 +4,8 @@ import { Repository } from 'typeorm'
 import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 
-import { UsersDto } from './dto/users.dto';
-import { UsersEntity } from './users.entity';
-import { UserRO } from './users.interface'
+import { UsersDto } from './dto/users.dto'
+import { UsersEntity } from './users.entity'
 
 
 @Injectable()
@@ -21,24 +20,20 @@ export class UsersService {
      * Return JWT.
      * @param userData UsersDto
      */
-    async getTokens( { email }: UsersDto ): Promise<UserRO> {
-        const refresh_token = await this.jwtService.sign( { email: email, refresh: true } )
-        const access_token = await this.jwtService.sign( { email: email, refresh_token: refresh_token } )
+    async getToken( email ): Promise<string> {
+        const auth = await this.jwtService.sign( { email: email } )
 
         // Update user token.
         await this.repository.update(
             { email: email },
-            { token: refresh_token }
+            { token: auth }
         )
 
-        return {
-            user: {
-                email: email,
-                token: access_token,
-                refresh_token: refresh_token,
-                cookie: refresh_token
-            }
-        }
+        return auth
+    }
+
+    async findOneByEmail( email: string ): Promise<any> {
+        return await this.repository.findOne( { email: email } )
     }
 
     /**

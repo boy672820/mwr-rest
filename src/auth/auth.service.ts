@@ -16,4 +16,12 @@ export class AuthService {
 
         else return null
     }
+
+    async findOneByEmail( email: string ): Promise<UsersEntity> {
+        const user = await this.usersService.findOneByEmail( email )
+
+        if ( ! user ) return null
+
+        return user
+    }
 }
