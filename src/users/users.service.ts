@@ -36,7 +36,7 @@ export class UsersService {
                 email: email,
                 token: access_token,
                 refresh_token: refresh_token,
-                cookie: `Authentication=${refresh_token}; HttpOnly; Path=/;`
+                cookie: refresh_token
             }
         }
     }

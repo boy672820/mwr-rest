@@ -29,9 +29,15 @@ export class UsersController {
             maxAge: 1860000
         }
         // Set httpOnly cookie.
-        response.setCookie( 'token', res.user.cookie, cookieOptions )
+        response.setCookie( 'authentication', res.user.cookie, cookieOptions )
 
         return res
+    }
+
+    @UseGuards( JwtAuthGuard )
+    @Get( '/authenticate' )
+    async authenticate( @Req() req ) {
+        return req
     }
 
     @UseGuards( JwtAuthGuard )
