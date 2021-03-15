@@ -1,8 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm'
 
-@Entity( 'routine_date' )
+@Entity('routine_date')
 export class RoutineDateEntity {
-
     @PrimaryGeneratedColumn()
     ID: number
 
@@ -14,5 +13,4 @@ export class RoutineDateEntity {
 
     @Column()
     routine_date: string
-
 }
