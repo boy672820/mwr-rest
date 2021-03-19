@@ -16,6 +16,8 @@ import {RoutineUpdateSetDTO} from './dto/routine.update.set.dto'
 import {RoutineCreateSetDTO} from './dto/routine.create.set.dto'
 import {RoutineUpdateExerciseDTO} from './dto/routine.update.exercise.dto'
 import {RoutineUpdateBlockDTO} from './dto/routine.update.block.dto'
+import {RoutineRecordsEntity} from './entities/routine.record.entity'
+import {RecordEntity} from 'src/record/entities/record.entity'
 
 @Injectable()
 export class RoutineService {
@@ -37,6 +39,9 @@ export class RoutineService {
 
         @InjectRepository(RoutineSetsEntity)
         private readonly setRepository: Repository<RoutineSetsEntity>,
+
+        @InjectRepository(RoutineRecordsEntity)
+        private readonly recordRepository: Repository<RoutineRecordsEntity>,
     ) {}
 
     async getActiveRoutine(user_email: string): Promise<RoutineEntity> {
@@ -270,5 +275,22 @@ export class RoutineService {
             month: month,
             date: date,
         }
+    }
+
+    /**
+     * Get record by block id.
+     * @param block_id Block id
+     * @returns
+     */
+    async getRecordByBlockId(block_id: number): Promise<RoutineRecordsEntity> {
+        return await this.recordRepository.findOne({block_id: block_id})
+    }
+
+    async createRecord(user_id: number) {
+        const recordEntity = new RecordEntity()
+
+        recordEntity.user_id = user_id
+
+        // return await this.recordRepository.save(recordEntity)
     }
 }

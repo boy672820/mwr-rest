@@ -1,7 +1,7 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm'
 
 @Entity('records')
-export class RecordEntity {
+export class RoutineRecordsEntity {
     @PrimaryGeneratedColumn()
     ID: number
 
@@ -9,10 +9,10 @@ export class RecordEntity {
     user_id: number
 
     @Column()
-    routine_id: number
+    block_id: number
 
     @Column()
-    record_date: Date
+    record_date: string
 
     @Column()
     record_content: string
