@@ -16,8 +16,6 @@ import {RoutineUpdateSetDTO} from './dto/routine.update.set.dto'
 import {RoutineCreateSetDTO} from './dto/routine.create.set.dto'
 import {RoutineUpdateExerciseDTO} from './dto/routine.update.exercise.dto'
 import {RoutineUpdateBlockDTO} from './dto/routine.update.block.dto'
-import {RoutineRecordsEntity} from './entities/routine.record.entity'
-import {RecordEntity} from 'src/record/entities/record.entity'
 
 @Injectable()
 export class RoutineService {
@@ -39,9 +37,6 @@ export class RoutineService {
 
         @InjectRepository(RoutineSetsEntity)
         private readonly setRepository: Repository<RoutineSetsEntity>,
-
-        @InjectRepository(RoutineRecordsEntity)
-        private readonly recordRepository: Repository<RoutineRecordsEntity>,
     ) {}
 
     async getActiveRoutine(user_email: string): Promise<RoutineEntity> {
@@ -67,11 +62,17 @@ export class RoutineService {
                 'block',
                 'routine_date.block_id = block.ID',
             )
+            .leftJoinAndSelect(
+                'records',
+                'record',
+                'block.ID = record.block_id',
+            )
             .select([
                 'routine_date.ID as ID',
                 'routine_date.routine_date as routine_date',
                 'routine_date.block_id as block_id',
                 'block.block_title as block_title',
+                'record.ID as record_id',
             ])
             .where(`routine_date.routine_id = ${routine_id}`)
             .getRawMany()
@@ -83,6 +84,7 @@ export class RoutineService {
                 ID: row.ID,
                 block_id: row.block_id,
                 block_title: row.block_title,
+                record_id: row.record_id,
             }
         })
 
@@ -275,22 +277,5 @@ export class RoutineService {
             month: month,
             date: date,
         }
-    }
-
-    /**
-     * Get record by block id.
-     * @param block_id Block id
-     * @returns
-     */
-    async getRecordByBlockId(block_id: number): Promise<RoutineRecordsEntity> {
-        return await this.recordRepository.findOne({block_id: block_id})
-    }
-
-    async createRecord(user_id: number) {
-        const recordEntity = new RecordEntity()
-
-        recordEntity.user_id = user_id
-
-        // return await this.recordRepository.save(recordEntity)
     }
 }

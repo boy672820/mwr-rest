@@ -1,7 +1,6 @@
-import { IsNotEmpty } from 'class-validator'
+import {IsNotEmpty} from 'class-validator'
 
 export class RoutineBlockDTO {
-
     @IsNotEmpty()
     readonly routine_id: number
 
@@ -10,5 +9,4 @@ export class RoutineBlockDTO {
 
     @IsNotEmpty()
     readonly block_title: string
-
 }
