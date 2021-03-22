@@ -4,12 +4,15 @@ import {Repository} from 'typeorm'
 
 import {RecordEntity} from './entities/record.entity'
 import {RecordCreateDTO} from './dto/record.create.dto'
+import {RoutineExerciseEntity} from 'src/routine/entities/routine.exercise.entity'
 
 @Injectable()
 export class RecordService {
     constructor(
         @InjectRepository(RecordEntity)
         private readonly recordRepository: Repository<RecordEntity>,
+        @InjectRepository(RoutineExerciseEntity)
+        private readonly exerciseRepository: Repository<RoutineExerciseEntity>,
     ) {}
 
     /**
@@ -42,7 +45,7 @@ export class RecordService {
      * @returns
      */
     async getRecordWithBlock(record_id: number): Promise<any> {
-        return await this.recordRepository
+        const record = await this.recordRepository
             .createQueryBuilder('records')
             .leftJoinAndSelect('blocks', 'block', 'block.ID = records.block_id')
             .leftJoinAndSelect(
@@ -50,27 +53,24 @@ export class RecordService {
                 'date',
                 'date.block_id = block.ID',
             )
-            .leftJoinAndSelect(
-                'exercises',
-                'exercise',
-                'exercise.block_id = block.ID',
-            )
-            .leftJoinAndSelect('sets', 'set', 'set.exercise_id = exercise.ID')
             .select([
                 'records.record_date',
                 'records.record_content',
+                'block.ID',
                 'block.block_title',
                 'date.routine_date',
-                'exercise.exercise_name',
-                'set.set_number',
-                'set.set_reps',
-                'set.set_max_reps',
-                'set.set_rir',
-                'set.set_disable_range',
-                'set.set_rest',
-                'set.set_weight',
             ])
             .where(`records.ID = ${record_id}`)
-            .getRawMany()
+            .getRawOne()
+
+        const exercises = await this.exerciseRepository.find({
+            where: {block_id: record.block_ID},
+            relations: ['sets'],
+        })
+
+        return {
+            ...record,
+            exercises: exercises,
+        }
     }
 }
