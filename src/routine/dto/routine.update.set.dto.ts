@@ -1,7 +1,6 @@
-import { IsNotEmpty } from 'class-validator'
+import {IsNotEmpty} from 'class-validator'
 
 export class RoutineUpdateSetDTO {
-
     @IsNotEmpty()
     readonly ID: number
 
@@ -9,7 +8,7 @@ export class RoutineUpdateSetDTO {
     readonly exercise_id: number
 
     @IsNotEmpty()
-    readonly set_weight: number
+    readonly set_weight: string
 
     @IsNotEmpty()
     readonly set_reps: number
@@ -25,5 +24,4 @@ export class RoutineUpdateSetDTO {
 
     @IsNotEmpty()
     readonly set_rest: number
-
 }

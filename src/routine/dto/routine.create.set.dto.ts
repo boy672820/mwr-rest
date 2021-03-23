@@ -6,7 +6,7 @@ export class RoutineCreateSetDTO {
     readonly exercise_id: number
 
     @IsNotEmpty()
-    readonly set_weight: number
+    readonly set_weight: string
 
     @IsNotEmpty()
     readonly set_reps: number

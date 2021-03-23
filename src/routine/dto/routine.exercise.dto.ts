@@ -12,7 +12,7 @@ export class RoutineExerciseDTO {
     readonly set_number: number
 
     @IsNotEmpty()
-    readonly set_weight: number
+    readonly set_weight: string
 
     @IsNotEmpty()
     readonly set_reps: number
