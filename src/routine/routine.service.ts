@@ -123,8 +123,6 @@ export class RoutineService {
         // Create exercise.
         const exercise = await this.exerciseRepository.save(exerciseEntity)
 
-        const sets: RoutineSetsEntity[] = []
-
         let i = 1
         for (i; i <= data.set_number; i += 1) {
             const setEntity = new RoutineSetsEntity()
@@ -206,7 +204,7 @@ export class RoutineService {
         })
 
         // Update set_number order.
-        const res = sets.map(async (row, i) => {
+        sets.forEach(async (row, i) => {
             const set_number = i + 1
 
             return await this.setRepository.update(

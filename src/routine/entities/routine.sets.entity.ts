@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 import {RoutineExerciseEntity} from './routine.exercise.entity'
 
-@Entity('sets')
+@Entity({name: 'sets', synchronize: false})
 export class RoutineSetsEntity {
     @PrimaryGeneratedColumn()
     ID: number
@@ -18,7 +18,7 @@ export class RoutineSetsEntity {
     @Column()
     set_number: number
 
-    @Column({type: 'varchar'})
+    @Column({type: 'decimal'})
     set_weight: string
 
     @Column()
@@ -36,7 +36,7 @@ export class RoutineSetsEntity {
     @Column()
     set_rest: number
 
-    @ManyToOne((type) => RoutineExerciseEntity, (exercise) => exercise.sets, {
+    @ManyToOne(() => RoutineExerciseEntity, (exercise) => exercise.sets, {
         onDelete: 'CASCADE',
     })
     @JoinColumn({name: 'exercise_id'})

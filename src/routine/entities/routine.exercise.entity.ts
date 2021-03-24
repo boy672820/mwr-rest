@@ -20,10 +20,10 @@ export class RoutineExerciseEntity {
     @Column()
     exercise_name: string
 
-    @OneToMany((type) => RoutineSetsEntity, (set) => set.exercise)
+    @OneToMany(() => RoutineSetsEntity, (set) => set.exercise)
     sets: RoutineSetsEntity[]
 
-    @ManyToOne((type) => RoutineBlockEntity, (block) => block.exercises, {
+    @ManyToOne(() => RoutineBlockEntity, (block) => block.exercises, {
         onDelete: 'CASCADE',
     })
     @JoinColumn({name: 'block_id'})
