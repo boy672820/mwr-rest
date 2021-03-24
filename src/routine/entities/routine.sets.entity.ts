@@ -18,7 +18,7 @@ export class RoutineSetsEntity {
     @Column()
     set_number: number
 
-    @Column()
+    @Column({type: 'varchar'})
     set_weight: string
 
     @Column()
