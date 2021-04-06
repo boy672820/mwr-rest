@@ -81,19 +81,30 @@ export class RecordService {
     /**
      * Create record item.
      * @param data RecordItemCreateDTO
-     * @returns 
+     * @returns
      */
     async createRecordItem(data: RecordItemCreateDTO) {
         const recordItemEntity = new RecordItemEntity()
 
-        recordItemEntity.record_id = data.record_id
-        recordItemEntity.record_item_number = data.record_item_number
-        recordItemEntity.record_item_weight = data.record_item_weight
-        recordItemEntity.record_item_reps = data.record_item_reps
-        recordItemEntity.record_item_max_reps = data.record_item_max_reps
-        recordItemEntity.record_item_disable_range = data.record_item_disable_range
-        recordItemEntity.record_item_rir = data.record_item_rir
-        recordItemEntity.record_item_rest = data.record_item_rest
+        const {
+            record_id,
+            record_item_number,
+            record_item_weight,
+            record_item_reps,
+            record_item_max_reps,
+            record_item_disable_range,
+            record_item_rir,
+            record_item_rest,
+        } = data
+
+        recordItemEntity.record_id = record_id
+        recordItemEntity.record_item_number = record_item_number
+        recordItemEntity.record_item_weight = record_item_weight
+        recordItemEntity.record_item_reps = record_item_reps
+        recordItemEntity.record_item_max_reps = record_item_max_reps
+        recordItemEntity.record_item_disable_range = record_item_disable_range
+        recordItemEntity.record_item_rir = record_item_rir
+        recordItemEntity.record_item_rest = record_item_rest
         recordItemEntity.record_item_complete = 0
 
         return await this.recordItemRepository.create(recordItemEntity)
