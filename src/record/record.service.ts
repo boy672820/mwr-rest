@@ -5,12 +5,16 @@ import {Repository} from 'typeorm'
 import {RecordEntity} from './entities/record.entity'
 import {RecordCreateDTO} from './dto/record.create.dto'
 import {RoutineExerciseEntity} from 'src/routine/entities/routine.exercise.entity'
+import {RecordItemCreateDTO} from './dto/record.item.create.dto'
+import {RecordItemEntity} from './entities/record_item.entity'
 
 @Injectable()
 export class RecordService {
     constructor(
         @InjectRepository(RecordEntity)
         private readonly recordRepository: Repository<RecordEntity>,
+        @InjectRepository(RecordItemEntity)
+        private readonly recordItemRepository: Repository<RecordItemEntity>,
         @InjectRepository(RoutineExerciseEntity)
         private readonly exerciseRepository: Repository<RoutineExerciseEntity>,
     ) {}
@@ -72,5 +76,26 @@ export class RecordService {
             ...record,
             exercises: exercises,
         }
+    }
+
+    /**
+     * Create record item.
+     * @param data RecordItemCreateDTO
+     * @returns 
+     */
+    async createRecordItem(data: RecordItemCreateDTO) {
+        const recordItemEntity = new RecordItemEntity()
+
+        recordItemEntity.record_id = data.record_id
+        recordItemEntity.record_item_number = data.record_item_number
+        recordItemEntity.record_item_weight = data.record_item_weight
+        recordItemEntity.record_item_reps = data.record_item_reps
+        recordItemEntity.record_item_max_reps = data.record_item_max_reps
+        recordItemEntity.record_item_disable_range = data.record_item_disable_range
+        recordItemEntity.record_item_rir = data.record_item_rir
+        recordItemEntity.record_item_rest = data.record_item_rest
+        recordItemEntity.record_item_complete = 0
+
+        return await this.recordItemRepository.create(recordItemEntity)
     }
 }

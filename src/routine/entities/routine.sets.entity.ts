@@ -19,7 +19,7 @@ export class RoutineSetsEntity {
     set_number: number
 
     @Column({type: 'decimal'})
-    set_weight: string
+    set_weight: number
 
     @Column()
     set_reps: number

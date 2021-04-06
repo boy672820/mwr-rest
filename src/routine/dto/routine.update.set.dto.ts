@@ -8,7 +8,7 @@ export class RoutineUpdateSetDTO {
     readonly exercise_id: number
 
     @IsNotEmpty()
-    readonly set_weight: string
+    readonly set_weight: number
 
     @IsNotEmpty()
     readonly set_reps: number
