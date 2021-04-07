@@ -83,11 +83,14 @@ export class RecordService {
      * @param data RecordItemCreateDTO
      * @returns
      */
-    async createRecordItem(data: RecordItemCreateDTO) {
+    async createRecordItem(
+        data: RecordItemCreateDTO,
+    ): Promise<RecordItemEntity> {
         const recordItemEntity = new RecordItemEntity()
 
         const {
             record_id,
+            set_id,
             record_item_number,
             record_item_weight,
             record_item_reps,

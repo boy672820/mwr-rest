@@ -1,6 +1,6 @@
 import {Controller, Post, Body, Get, Param} from '@nestjs/common'
 import {RecordCreateDTO} from './dto/record.create.dto'
-import { RecordItemCreateDTO } from './dto/record.item.create.dto'
+import {RecordItemCreateDTO} from './dto/record.item.create.dto'
 import {RecordEntity} from './entities/record.entity'
 import {RecordService} from './record.service'
 
@@ -32,6 +32,10 @@ export class RecordController {
 
     @Post('/record-item')
     async createRecordItem(data: RecordItemCreateDTO) {
-        return await this.createRecordItem(data)
+        const res = await this.recordService.createRecordItem(data)
+
+        console.log(res)
+
+        return res
     }
 }
