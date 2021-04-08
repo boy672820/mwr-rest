@@ -9,6 +9,9 @@ export class RecordItemEntity {
     record_id: number
 
     @Column()
+    set_id: number
+
+    @Column()
     record_item_number: number
 
     @Column()

@@ -101,6 +101,7 @@ export class RecordService {
         } = data
 
         recordItemEntity.record_id = record_id
+        recordItemEntity.set_id = set_id
         recordItemEntity.record_item_number = record_item_number
         recordItemEntity.record_item_weight = record_item_weight
         recordItemEntity.record_item_reps = record_item_reps
@@ -110,6 +111,6 @@ export class RecordService {
         recordItemEntity.record_item_rest = record_item_rest
         recordItemEntity.record_item_complete = 0
 
-        return await this.recordItemRepository.create(recordItemEntity)
+        return await this.recordItemRepository.save(recordItemEntity)
     }
 }

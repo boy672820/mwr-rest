@@ -31,10 +31,8 @@ export class RecordController {
     }
 
     @Post('/record-item')
-    async createRecordItem(data: RecordItemCreateDTO) {
+    async createRecordItem(@Body() data: RecordItemCreateDTO) {
         const res = await this.recordService.createRecordItem(data)
-
-        console.log(res)
 
         return res
     }
