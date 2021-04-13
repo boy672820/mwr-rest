@@ -113,4 +113,12 @@ export class RecordService {
 
         return await this.recordItemRepository.save(recordItemEntity)
     }
+
+    async getRecordItems(record_id: number) {
+        return await this.recordItemRepository.find({record_id: record_id})
+    }
+
+    async updateComplete(complete: boolean) {
+        return complete
+    }
 }

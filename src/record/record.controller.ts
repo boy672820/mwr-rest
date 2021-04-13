@@ -1,4 +1,4 @@
-import {Controller, Post, Body, Get, Param} from '@nestjs/common'
+import {Controller, Post, Body, Get, Param, Patch} from '@nestjs/common'
 import {RecordCreateDTO} from './dto/record.create.dto'
 import {RecordItemCreateDTO} from './dto/record.item.create.dto'
 import {RecordEntity} from './entities/record.entity'
@@ -35,5 +35,15 @@ export class RecordController {
         const res = await this.recordService.createRecordItem(data)
 
         return res
+    }
+
+    @Get('/record-item/:record_id')
+    async getRecordItems(@Param() {record_id}) {
+        return await this.recordService.getRecordItems(record_id)
+    }
+
+    @Patch('/record-item/complete')
+    async updateComplete(@Body() data) {
+        console.log(data)
     }
 }
