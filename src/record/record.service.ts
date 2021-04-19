@@ -114,7 +114,7 @@ export class RecordService {
         return await this.recordItemRepository.save(recordItemEntity)
     }
 
-    async getRecordItems(record_id: number) {
+    async getRecordItems(record_id: number): Promise<RecordItemEntity[]> {
         return await this.recordItemRepository.find({record_id: record_id})
     }
 

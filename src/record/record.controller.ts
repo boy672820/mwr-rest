@@ -2,6 +2,7 @@ import {Controller, Post, Body, Get, Param, Patch} from '@nestjs/common'
 import {RecordCreateDTO} from './dto/record.create.dto'
 import {RecordItemCreateDTO} from './dto/record.item.create.dto'
 import {RecordEntity} from './entities/record.entity'
+import { RecordItemEntity } from './entities/record_item.entity'
 import {RecordService} from './record.service'
 
 @Controller('record')
@@ -38,7 +39,7 @@ export class RecordController {
     }
 
     @Get('/record-item/:record_id')
-    async getRecordItems(@Param() {record_id}) {
+    async getRecordItems(@Param() {record_id}): Promise<RecordItemEntity[]> {
         return await this.recordService.getRecordItems(record_id)
     }
 
