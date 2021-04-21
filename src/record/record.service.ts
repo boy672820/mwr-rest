@@ -7,6 +7,8 @@ import {RecordCreateDTO} from './dto/record.create.dto'
 import {RoutineExerciseEntity} from 'src/routine/entities/routine.exercise.entity'
 import {RecordItemCreateDTO} from './dto/record.item.create.dto'
 import {RecordItemEntity} from './entities/record_item.entity'
+import {RecordItemCompleteDTO} from './dto/record.item.complete.dto'
+import {RoutineSetsEntity} from 'src/routine/entities/routine.sets.entity'
 
 @Injectable()
 export class RecordService {
@@ -17,6 +19,8 @@ export class RecordService {
         private readonly recordItemRepository: Repository<RecordItemEntity>,
         @InjectRepository(RoutineExerciseEntity)
         private readonly exerciseRepository: Repository<RoutineExerciseEntity>,
+        @InjectRepository(RoutineSetsEntity)
+        private readonly setRepository: Repository<RoutineSetsEntity>,
     ) {}
 
     /**
@@ -118,7 +122,66 @@ export class RecordService {
         return await this.recordItemRepository.find({record_id: record_id})
     }
 
-    async updateComplete(complete: boolean) {
-        return complete
+    /**
+     * Get record item by set ID
+     * @param set_id
+     * @returns
+     */
+    async getRecordItemBySetID(set_id: number): Promise<RecordItemEntity> {
+        return await this.recordItemRepository.findOne({set_id})
+    }
+
+    /**
+     * Update complete from record item
+     * @param data
+     * @returns
+     */
+    async updateComplete(data: RecordItemCompleteDTO) {
+        const {record_id, set_id, complete} = data
+
+        const recordItem = await this.getRecordItemBySetID(set_id)
+
+        if (recordItem) {
+            const recordItem = await this.recordItemRepository.update(
+                {set_id},
+                {record_item_complete: complete ? 1 : 0},
+            )
+
+            return recordItem
+        } else {
+            const {
+                ID,
+                set_number,
+                set_weight,
+                set_reps,
+                set_max_reps,
+                set_disable_range,
+                set_rir,
+                set_rest,
+            } = await this.getSetByID(set_id)
+
+            const createRecordItemData: RecordItemCreateDTO = {
+                record_id,
+                set_id: ID,
+                record_item_number: set_number,
+                record_item_weight: set_weight,
+                record_item_reps: set_reps,
+                record_item_max_reps: set_max_reps,
+                record_item_disable_range: set_disable_range,
+                record_item_rir: set_rir,
+                record_item_rest: set_rest,
+            }
+
+            this.createRecordItem(createRecordItemData)
+        }
+    }
+
+    /**
+     * Get sets by ID.
+     * @param ID
+     * @returns
+     */
+    async getSetByID(ID: number): Promise<RoutineSetsEntity> {
+        return await this.setRepository.findOne({ID})
     }
 }
