@@ -9,6 +9,7 @@ import {RecordItemCreateDTO} from './dto/record.item.create.dto'
 import {RecordItemEntity} from './entities/record_item.entity'
 import {RecordItemCompleteDTO} from './dto/record.item.complete.dto'
 import {RoutineSetsEntity} from 'src/routine/entities/routine.sets.entity'
+import {RecordItemUpdateDTO} from './dto/record.item.update.dto'
 
 @Injectable()
 export class RecordService {
@@ -118,6 +119,42 @@ export class RecordService {
         return await this.recordItemRepository.save(recordItemEntity)
     }
 
+    /**
+     * Update record item.
+     * @param data
+     */
+    async updateRecordItem(ID: number, data: RecordItemUpdateDTO) {
+        const {
+            record_item_weight,
+            record_item_reps,
+            record_item_max_reps,
+            record_item_disable_range,
+            record_item_rir,
+            record_item_rest,
+            record_item_complete,
+        } = data
+
+        const update = await this.recordItemRepository.update(
+            {ID},
+            {
+                record_item_weight,
+                record_item_reps,
+                record_item_max_reps,
+                record_item_disable_range,
+                record_item_rir,
+                record_item_rest,
+                record_item_complete: record_item_complete ? 1 : 0,
+            },
+        )
+
+        return update
+    }
+
+    /**
+     * Get record items.
+     * @param record_id
+     * @returns
+     */
     async getRecordItems(record_id: number): Promise<RecordItemEntity[]> {
         return await this.recordItemRepository.find({record_id: record_id})
     }
@@ -170,6 +207,7 @@ export class RecordService {
                 record_item_disable_range: set_disable_range,
                 record_item_rir: set_rir,
                 record_item_rest: set_rest,
+                record_item_complete: complete,
             }
 
             this.createRecordItem(createRecordItemData)

@@ -1,7 +1,8 @@
 import {Controller, Post, Body, Get, Param, Patch} from '@nestjs/common'
 import {RecordCreateDTO} from './dto/record.create.dto'
-import { RecordItemCompleteDTO } from './dto/record.item.complete.dto'
+import {RecordItemCompleteDTO} from './dto/record.item.complete.dto'
 import {RecordItemCreateDTO} from './dto/record.item.create.dto'
+import {RecordItemUpdateDTO} from './dto/record.item.update.dto'
 import {RecordEntity} from './entities/record.entity'
 import {RecordItemEntity} from './entities/record_item.entity'
 import {RecordService} from './record.service'
@@ -37,6 +38,14 @@ export class RecordController {
         const res = await this.recordService.createRecordItem(data)
 
         return res
+    }
+
+    @Patch('/record-item/:record_item_id')
+    async updateRecordItem(
+        @Body() data: RecordItemUpdateDTO,
+        @Param() {record_item_id}: {record_item_id: number},
+    ) {
+        return await this.recordService.updateRecordItem(record_item_id, data)
     }
 
     @Get('/record-item/:record_id')

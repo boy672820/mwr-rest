@@ -1,15 +1,6 @@
 import {IsNotEmpty} from 'class-validator'
 
-export class RecordItemCreateDTO {
-    @IsNotEmpty()
-    readonly record_id: number
-
-    @IsNotEmpty()
-    readonly set_id: number
-
-    @IsNotEmpty()
-    readonly record_item_number: number
-
+export class RecordItemUpdateDTO {
     @IsNotEmpty()
     readonly record_item_weight: number
 

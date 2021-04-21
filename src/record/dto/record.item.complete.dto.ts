@@ -4,7 +4,7 @@ export class RecordItemCompleteDTO {
     @IsNotEmpty()
     @IsNumber()
     readonly record_id: number
-    
+
     @IsNotEmpty()
     @IsNumber()
     readonly set_id: number
