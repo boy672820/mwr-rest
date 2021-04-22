@@ -103,6 +103,7 @@ export class RecordService {
             record_item_disable_range,
             record_item_rir,
             record_item_rest,
+            record_item_complete,
         } = data
 
         recordItemEntity.record_id = record_id
@@ -114,7 +115,7 @@ export class RecordService {
         recordItemEntity.record_item_disable_range = record_item_disable_range
         recordItemEntity.record_item_rir = record_item_rir
         recordItemEntity.record_item_rest = record_item_rest
-        recordItemEntity.record_item_complete = 0
+        recordItemEntity.record_item_complete = record_item_complete ? 1 : 0
 
         return await this.recordItemRepository.save(recordItemEntity)
     }
