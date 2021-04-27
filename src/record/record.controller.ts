@@ -57,4 +57,24 @@ export class RecordController {
     async updateComplete(@Body() data: RecordItemCompleteDTO) {
         return await this.recordService.updateComplete(data)
     }
+
+    @Patch('/record-item/disable')
+    async disableRecordItem(
+        @Body()
+        {
+            record_id,
+            set_id,
+            disable,
+        }: {
+            record_id: number
+            set_id: number
+            disable: boolean
+        },
+    ) {
+        return await this.recordService.disableRecordItem(
+            record_id,
+            set_id,
+            disable,
+        )
+    }
 }

@@ -211,7 +211,7 @@ export class RecordService {
                 record_item_complete: complete,
             }
 
-            this.createRecordItem(createRecordItemData)
+            return await this.createRecordItem(createRecordItemData)
         }
     }
 
@@ -222,5 +222,49 @@ export class RecordService {
      */
     async getSetByID(ID: number): Promise<RoutineSetsEntity> {
         return await this.setRepository.findOne({ID})
+    }
+
+    async disableRecordItem(
+        record_id: number,
+        set_id: number,
+        disable: boolean,
+    ) {
+        const recordItem = await this.getRecordItemBySetID(set_id)
+
+        if (recordItem) {
+            return await this.recordItemRepository.update(
+                {set_id},
+                {
+                    record_item_set_disable: disable ? 1 : 0,
+                },
+            )
+        } else {
+            const {
+                ID,
+                set_number,
+                set_weight,
+                set_reps,
+                set_max_reps,
+                set_disable_range,
+                set_rir,
+                set_rest,
+            } = await this.getSetByID(set_id)
+
+            const createRecordItemData: RecordItemCreateDTO = {
+                record_id,
+                set_id: ID,
+                record_item_number: set_number,
+                record_item_weight: set_weight,
+                record_item_reps: set_reps,
+                record_item_max_reps: set_max_reps,
+                record_item_disable_range: set_disable_range,
+                record_item_rir: set_rir,
+                record_item_rest: set_rest,
+                record_item_complete: false,
+                record_item_set_disable: disable,
+            }
+
+            return await this.createRecordItem(createRecordItemData)
+        }
     }
 }

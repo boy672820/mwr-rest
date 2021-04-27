@@ -34,4 +34,7 @@ export class RecordItemEntity {
 
     @Column()
     record_item_complete: number
+
+    @Column()
+    record_item_set_disable: number
 }

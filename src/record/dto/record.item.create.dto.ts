@@ -30,4 +30,7 @@ export class RecordItemCreateDTO {
 
     @IsNotEmpty()
     readonly record_item_complete: boolean
+
+    @IsNotEmpty()
+    readonly record_item_set_disable?: boolean
 }
